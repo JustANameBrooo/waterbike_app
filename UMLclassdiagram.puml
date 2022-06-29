@@ -1,0 +1,112 @@
+@startuml
+set namespaceSeparator ::
+
+class "waterbike_app::bleDeviceList.dart::BLEDeviceList" {
+  +State<BLEDeviceList> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "waterbike_app::bleDeviceList.dart::BLEDeviceList"
+
+class "waterbike_app::bleDeviceList.dart::_BLEDeviceListState" {
+  -StreamSubscription<dynamic>? _subscription
+  -BleStatus? _bleStatus
+  +FlutterReactiveBle ble
+  +void initState()
+  +Widget build()
+  +void startScan()
+  +void stop()
+}
+
+"waterbike_app::bleDeviceList.dart::_BLEDeviceListState" o-- "dart::async::StreamSubscription<dynamic>"
+"waterbike_app::bleDeviceList.dart::_BLEDeviceListState" o-- "reactive_ble_platform_interface::src::model::ble_status.dart::BleStatus"
+"waterbike_app::bleDeviceList.dart::_BLEDeviceListState" o-- "flutter_reactive_ble::src::reactive_ble.dart::FlutterReactiveBle"
+"flutter::src::widgets::framework.dart::State" <|-- "waterbike_app::bleDeviceList.dart::_BLEDeviceListState"
+
+class "waterbike_app::geolocation.dart::GeolocationMap" {
+  +State<GeolocationMap> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "waterbike_app::geolocation.dart::GeolocationMap"
+
+class "waterbike_app::geolocation.dart::_GeolocationMapState" {
+  -CenterOnLocationUpdate _centerOnLocationUpdate
+  -StreamController<double?> _centerCurrentLocationStreamController
+  -MapController _mapController
+  -PanelController _sliderController
+  -bool _isNavigate
+  -List<dynamic>? _shorelineData
+  +double? totalDistance
+  -double? _bearing
+  -LatLng? _currLatLang
+  -_ShortestShorelinePt? _shortestShorelinePt
+  -List<Marker> _markers
+  -List<Polyline> _lineBtwnPts
+  -bool _sliderOpen
+  -bool _setTotalDistance
+  -double? _gpsSpeed
+  +void initState()
+  +Widget build()
+  +void dispose()
+  -void _checkPermission()
+  -void _loadShorelinesJson()
+  -void _nearestShorelineLatLng()
+  -void _addMarker()
+  -void _addLine()
+}
+
+"waterbike_app::geolocation.dart::_GeolocationMapState" o-- "flutter_map_location_marker::src::center_on_location_update.dart::CenterOnLocationUpdate"
+"waterbike_app::geolocation.dart::_GeolocationMapState" o-- "dart::async::StreamController<double>"
+"waterbike_app::geolocation.dart::_GeolocationMapState" o-- "flutter_map::flutter_map.dart::MapController"
+"waterbike_app::geolocation.dart::_GeolocationMapState" o-- "sliding_up_panel::src::panel.dart::PanelController"
+"waterbike_app::geolocation.dart::_GeolocationMapState" o-- "latlong2::latlong.dart::LatLng"
+"waterbike_app::geolocation.dart::_GeolocationMapState" o-- "waterbike_app::geolocation.dart::_ShortestShorelinePt"
+"flutter::src::widgets::framework.dart::State" <|-- "waterbike_app::geolocation.dart::_GeolocationMapState"
+
+class "waterbike_app::geolocation.dart::_ShortestShorelinePt" {
+  +LatLng point
+  +double distance
+}
+
+"waterbike_app::geolocation.dart::_ShortestShorelinePt" o-- "latlong2::latlong.dart::LatLng"
+
+class "waterbike_app::gridDashboard.dart::GridDashboard" {
+  +State<GridDashboard> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "waterbike_app::gridDashboard.dart::GridDashboard"
+
+class "waterbike_app::gridDashboard.dart::_GridDashboardState" {
+  +double? speed
+  -bool _setTotalDistance
+  +void initState()
+  +Widget build()
+  +void dispose()
+  -void _checkPermission()
+  -void _startTotalDistance()
+  -void _resetTotalDistance()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "waterbike_app::gridDashboard.dart::_GridDashboardState"
+
+class "waterbike_app::home.dart::HomePageScreen" {
+  +State<HomePageScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "waterbike_app::home.dart::HomePageScreen"
+
+class "waterbike_app::home.dart::_HomePageState" {
+  -TextEditingController _uuidController
+  +Widget build()
+}
+
+"waterbike_app::home.dart::_HomePageState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "waterbike_app::home.dart::_HomePageState"
+
+class "waterbike_app::main.dart::MyApp" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "waterbike_app::main.dart::MyApp"
+
+
+@enduml
