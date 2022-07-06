@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'geolocation.dart';
 import './distance/totalDistance.dart' as total_distance;
+import 'bleConnector.dart';
 import 'dart:io' show Platform;
 
 class GridDashboard extends StatefulWidget {

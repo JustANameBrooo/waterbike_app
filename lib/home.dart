@@ -3,10 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'gridDashboard.dart';
 import './bleDeviceList.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import 'package:provider/provider.dart';
+import 'bleConnector.dart';
+
 
 class HomePageScreen extends StatefulWidget {
-  const HomePageScreen({Key? key}) : super(key: key);
+  final String ?deviceId;
+  const HomePageScreen({Key? key, this.deviceId}) : super(key: key);
 
   @override
   State<HomePageScreen> createState() => _HomePageState();
@@ -14,6 +16,15 @@ class HomePageScreen extends StatefulWidget {
 
 class _HomePageState extends State<HomePageScreen> {
   late TextEditingController _uuidController;
+
+  late final BleConnector bleConnector;
+
+  @override
+  void initState() {
+    bleConnector = BleConnector();
+    //deviceConnector = BleDeviceConnector();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +70,7 @@ class _HomePageState extends State<HomePageScreen> {
                     showDialog(
                         context: context,
                         builder: (_) {
-                          return BLEDeviceList();
+                          return BLEDeviceList(bleConnector: bleConnector);
                         });
                   },
                   alignment: Alignment.topCenter,

@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import './bleConnector.dart' as bluetooth;
+import 'package:waterbike_app/home.dart';
+import 'bleConnector.dart';
+// import 'bleDeviceConnector.dart';
 
 class BLEDeviceList extends StatefulWidget {
-  const BLEDeviceList({Key? key}) : super(key: key);
+  final BleConnector bleConnector;
+  const BLEDeviceList({Key? key, required this.bleConnector}) : super(key: key);
 
   @override
   State<BLEDeviceList> createState() => _BLEDeviceListState();
@@ -13,19 +16,21 @@ class BLEDeviceList extends StatefulWidget {
 class _BLEDeviceListState extends State<BLEDeviceList> {
   StreamSubscription? _subscription;
   BleStatus? _bleStatus;
-
-  final ble = bluetooth.ble;
-
+  late final BleConnector bleConnector = widget.bleConnector;
+  //late final BleDeviceConnector deviceConnector;
+  final devices = <DiscoveredDevice>[];
   // bool connected = false;
 
   @override
   void initState() {
-    ble.statusStream.listen((status) {
+    // bleConnector = widget.bleConnector;
+    bleConnector.ble.statusStream.listen((status) {
       //code for handling status update
       setState(() {
-        _bleStatus = ble.status;
+        _bleStatus = bleConnector.ble.status;
       });
     });
+    //deviceConnector = BleDeviceConnector();
     super.initState();
   }
 
@@ -36,7 +41,7 @@ class _BLEDeviceListState extends State<BLEDeviceList> {
       content: SizedBox(
         height: 500,
         width: 500,
-        child: ble.status == BleStatus.ready
+        child: bleConnector.ble.status == BleStatus.ready
             ? Column(children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -59,7 +64,7 @@ class _BLEDeviceListState extends State<BLEDeviceList> {
                 ),
                 Flexible(
                   child: ListView(
-                    children: bluetooth.devices
+                    children: devices
                         .map(
                           (device) => Card(
                             child: ListTile(
@@ -67,16 +72,15 @@ class _BLEDeviceListState extends State<BLEDeviceList> {
                               subtitle:
                                   Text("${device.id}\nRSSI: ${device.rssi}"),
                               trailing: IconButton(
-                                color: bluetooth.connected
+                                color: bleConnector.connected
                                     ? Colors.blue
                                     : Colors.red,
                                 onPressed: () async {
-                                  bluetooth.connected
-                                      ? bluetooth.disconnect(device.id)
-                                      : await bluetooth.connect(device.id);
-                                  // setState(() {});
-                                  print(bluetooth.connection);
-                                  print(bluetooth.connected);
+                                  bleConnector.connected
+                                      ? bleConnector.disconnect(device.id)
+                                      : await bleConnector.connect(device.id);
+                                  setState(() {});
+                                  print(bleConnector.connected);
                                 },
                                 icon: Icon(Icons.bluetooth),
                                 splashRadius: 25,
@@ -96,7 +100,7 @@ class _BLEDeviceListState extends State<BLEDeviceList> {
           child: const Text('Cancel'),
         ),
         TextButton(
-          onPressed: () => Navigator.pop(context, bluetooth.devices),
+          onPressed: () => Navigator.pop(context, devices),
           child: const Text('OK'),
         ),
       ],
@@ -104,18 +108,18 @@ class _BLEDeviceListState extends State<BLEDeviceList> {
   }
 
   void startScan() {
-    bluetooth.devices.clear();
+    devices.clear();
     _subscription?.cancel();
-    _subscription = ble.scanForDevices(withServices: []).listen((device) {
+    _subscription = bleConnector.ble.scanForDevices(withServices: []).listen((device) {
       final knownDeviceIndex =
-          bluetooth.devices.indexWhere((d) => d.id == device.id);
+          devices.indexWhere((d) => d.id == device.id);
       if (knownDeviceIndex >= 0) {
         setState(() {
-          bluetooth.devices[knownDeviceIndex] = device;
+          devices[knownDeviceIndex] = device;
         });
       } else {
         setState(() {
-          bluetooth.devices.add(device);
+          devices.add(device);
         });
       }
     });
