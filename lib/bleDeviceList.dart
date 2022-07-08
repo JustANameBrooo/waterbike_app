@@ -7,6 +7,7 @@ import 'bleConnector.dart';
 
 class BLEDeviceList extends StatefulWidget {
   final BleConnector bleConnector;
+
   const BLEDeviceList({Key? key, required this.bleConnector}) : super(key: key);
 
   @override
@@ -17,8 +18,10 @@ class _BLEDeviceListState extends State<BLEDeviceList> {
   StreamSubscription? _subscription;
   BleStatus? _bleStatus;
   late final BleConnector bleConnector = widget.bleConnector;
+
   //late final BleDeviceConnector deviceConnector;
   final devices = <DiscoveredDevice>[];
+
   // bool connected = false;
 
   @override
@@ -62,8 +65,36 @@ class _BLEDeviceListState extends State<BLEDeviceList> {
                         }),
                   ],
                 ),
+          bleConnector.connectedDevices.isEmpty ? Container(): ListView(
+            shrinkWrap: true,
+            children: bleConnector.connectedDevices
+                .map(
+                  (device) => Card(
+                    child: ListTile(
+                      title: Text(device.deviceName),
+                      subtitle:
+                      Text("${device.connectedDeviceState.deviceId}"),
+                      trailing: IconButton(
+                        color: Colors.blue,
+                        onPressed: () async {
+                          // bleConnector.connected
+                          //     ? bleConnector.disconnect(device.id)
+                          //     :
+                          setState(() {
+                            bleConnector.disconnect(device);
+                          });
+                        },
+                        icon: Icon(Icons.bluetooth),
+                        splashRadius: 25,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
                 Flexible(
                   child: ListView(
+                    shrinkWrap: false,
                     children: devices
                         .map(
                           (device) => Card(
@@ -72,15 +103,15 @@ class _BLEDeviceListState extends State<BLEDeviceList> {
                               subtitle:
                                   Text("${device.id}\nRSSI: ${device.rssi}"),
                               trailing: IconButton(
-                                color: bleConnector.connected
-                                    ? Colors.blue
-                                    : Colors.red,
+                                color: Colors.red,
                                 onPressed: () async {
-                                  bleConnector.connected
-                                      ? bleConnector.disconnect(device.id)
-                                      : await bleConnector.connect(device.id);
-                                  setState(() {});
-                                  print(bleConnector.connected);
+                                  // bleConnector.connected
+                                  //     ? bleConnector.disconnect(device.id)
+                                  //     :
+                                  await bleConnector.connect(device.id, device.name);
+                                  setState(() {
+                                    //connectedDevice = device;
+                                  });
                                 },
                                 icon: Icon(Icons.bluetooth),
                                 splashRadius: 25,
@@ -109,10 +140,11 @@ class _BLEDeviceListState extends State<BLEDeviceList> {
 
   void startScan() {
     devices.clear();
+    //connectedDevice != null ? devices.add(connectedDevice!) : null;
     _subscription?.cancel();
-    _subscription = bleConnector.ble.scanForDevices(withServices: []).listen((device) {
-      final knownDeviceIndex =
-          devices.indexWhere((d) => d.id == device.id);
+    _subscription =
+        bleConnector.ble.scanForDevices(withServices: []).listen((device) {
+      final knownDeviceIndex = devices.indexWhere((d) => d.id == device.id);
       if (knownDeviceIndex >= 0) {
         setState(() {
           devices[knownDeviceIndex] = device;
