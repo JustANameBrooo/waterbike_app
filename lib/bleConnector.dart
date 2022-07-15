@@ -5,11 +5,18 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'bleConnector.dart';
 
 class BleConnector {
+
+
+  final Uuid SERVICE_UUID = Uuid.parse("44d55770-bd07-4ce7-8ff9-c564c9c9b24a");
+  final Uuid BATTERY_CHARACTERISTIC_UUID = Uuid.parse("62391be9-a26b-4a82-8a13-e4db229df11e");
+  final Uuid SPEED_CHARACTERISTIC_UUID = Uuid.parse("a56f6a0e-164d-4d7c-b4cd-74afbdfeaf1f");
+
   final ble = FlutterReactiveBle();
   late StreamSubscription<ConnectionStateUpdate> connection;
 
   // bool connected = false;
   final connectedDevices = <ConnectedDevice>[];
+  late Stream<List<int>> receivedDataStream;
 
   // late Stream<ConnectionStateUpdate> currentConnectionStream;
   Stream<ConnectionStateUpdate> get state => deviceConnectionController.stream;
@@ -29,7 +36,7 @@ class BleConnector {
     print("if test doesnt print after connection failed");
     connection = ble
         .connectToDevice(
-            id: deviceId, connectionTimeout: const Duration(seconds: 5))
+            id: deviceId, connectionTimeout: const Duration(seconds: 3))
         .listen((event) {
       var id = event.deviceId.toString();
       print("test" + id);
@@ -47,9 +54,14 @@ class BleConnector {
                 ConnectedDevice(connection, event, deviceName);
             connectedDevices.add(connectedDevice);
             print("Connected to " + id);
-            //final characteristic = QualifiedCharacteristic(serviceId: serviceUuid, characteristicId: characteristicUuid, deviceId: deviceId);
-            //final response = await ble.readCharacteristic(characteristic);
-            //print(response.toString());
+            final characteristic = QualifiedCharacteristic(serviceId: SERVICE_UUID, characteristicId: BATTERY_CHARACTERISTIC_UUID, deviceId: deviceId);
+            receivedDataStream = ble.subscribeToCharacteristic(characteristic);
+            receivedDataStream.listen((data) {
+              print("test");
+              print(String.fromCharCodes(data));
+            }, onError: (dynamic error) {
+
+            });
             break;
           }
         case DeviceConnectionState.disconnecting:
@@ -73,9 +85,10 @@ class BleConnector {
     });
   }
 
-  void disconnect(ConnectedDevice connectedDevice) async {
+  Future<void> disconnect(ConnectedDevice connectedDevice) async {
     try {
       await connectedDevice.connection.cancel();
+      connectedDevices.remove(connectedDevice);
     } on Exception catch (e, _) {
       print("Error disconnecting from a device: $e");
     } finally {
@@ -87,11 +100,7 @@ class BleConnector {
           failure: null,
         ),
       );
-      print("Disconnected, State of connected device: " +
-          connectedDevice.deviceName +
-          " is " +
-          connectedDevice.connection.toString());
-      connectedDevices.remove(connectedDevice);
+      print("Disconnected");
     }
   }
 }

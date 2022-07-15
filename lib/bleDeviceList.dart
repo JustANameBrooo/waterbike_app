@@ -80,8 +80,8 @@ class _BLEDeviceListState extends State<BLEDeviceList> {
                           // bleConnector.connected
                           //     ? bleConnector.disconnect(device.id)
                           //     :
+                          await bleConnector.disconnect(device);
                           setState(() {
-                            bleConnector.disconnect(device);
                           });
                         },
                         icon: Icon(Icons.bluetooth),
@@ -110,6 +110,7 @@ class _BLEDeviceListState extends State<BLEDeviceList> {
                                   //     :
                                   await bleConnector.connect(device.id, device.name);
                                   setState(() {
+                                    startScan();
                                     //connectedDevice = device;
                                   });
                                 },
