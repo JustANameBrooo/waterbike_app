@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePageScreen> {
           ),
           //TODO Grid Dashboard
           const SizedBox(height: 20),
-          const GridDashboard()
+          GridDashboard(bleConnector: bleConnector)
         ],
       ),
     );

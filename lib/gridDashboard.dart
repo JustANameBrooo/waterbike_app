@@ -10,7 +10,9 @@ import 'bleConnector.dart';
 import 'dart:io' show Platform;
 
 class GridDashboard extends StatefulWidget {
-  const GridDashboard({Key? key}) : super(key: key);
+
+  final BleConnector bleConnector;
+  const GridDashboard({Key? key, required this.bleConnector}) : super(key: key);
 
   @override
   State<GridDashboard> createState() => _GridDashboardState();

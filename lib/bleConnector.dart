@@ -5,18 +5,17 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'bleConnector.dart';
 
 class BleConnector {
-
-
-  final Uuid SERVICE_UUID = Uuid.parse("44d55770-bd07-4ce7-8ff9-c564c9c9b24a");
-  final Uuid BATTERY_CHARACTERISTIC_UUID = Uuid.parse("62391be9-a26b-4a82-8a13-e4db229df11e");
-  final Uuid SPEED_CHARACTERISTIC_UUID = Uuid.parse("a56f6a0e-164d-4d7c-b4cd-74afbdfeaf1f");
+  final Uuid serviceUuid = Uuid.parse("44d55770-bd07-4ce7-8ff9-c564c9c9b24a");
+  final Uuid BATTERY_CHARACTERISTIC_UUID =
+      Uuid.parse("62391be9-a26b-4a82-8a13-e4db229df11e");
+  final Uuid SPEED_CHARACTERISTIC_UUID =
+      Uuid.parse("a56f6a0e-164d-4d7c-b4cd-74afbdfeaf1f");
 
   final ble = FlutterReactiveBle();
   late StreamSubscription<ConnectionStateUpdate> connection;
 
   // bool connected = false;
   final connectedDevices = <ConnectedDevice>[];
-  late Stream<List<int>> receivedDataStream;
 
   // late Stream<ConnectionStateUpdate> currentConnectionStream;
   Stream<ConnectionStateUpdate> get state => deviceConnectionController.stream;
@@ -37,7 +36,7 @@ class BleConnector {
     connection = ble
         .connectToDevice(
             id: deviceId, connectionTimeout: const Duration(seconds: 3))
-        .listen((event) {
+        .listen((event) async {
       var id = event.deviceId.toString();
       print("test" + id);
       switch (event.connectionState) {
@@ -54,14 +53,16 @@ class BleConnector {
                 ConnectedDevice(connection, event, deviceName);
             connectedDevices.add(connectedDevice);
             print("Connected to " + id);
-            final characteristic = QualifiedCharacteristic(serviceId: SERVICE_UUID, characteristicId: BATTERY_CHARACTERISTIC_UUID, deviceId: deviceId);
-            receivedDataStream = ble.subscribeToCharacteristic(characteristic);
-            receivedDataStream.listen((data) {
-              print("test");
-              print(String.fromCharCodes(data));
-            }, onError: (dynamic error) {
+            await readCharacteristic(deviceId);
+            var batteryStream = subscribeBatteryStream(deviceId);
+            batteryStream.listen((event) {
+              print(event.toString());
+              for (var value in event) {
+                print(String.fromCharCode(value));
+              }
 
             });
+            // subscribeCharacteristic(deviceId);
             break;
           }
         case DeviceConnectionState.disconnecting:
@@ -101,6 +102,41 @@ class BleConnector {
         ),
       );
       print("Disconnected");
+    }
+  }
+
+  Future<void> readCharacteristic(String deviceId) async {
+    final characteristic = QualifiedCharacteristic(
+        serviceId: serviceUuid,
+        characteristicId: BATTERY_CHARACTERISTIC_UUID,
+        deviceId: deviceId);
+    final response = await ble.readCharacteristic(characteristic);
+    print("read_characteristics " + response.toString());
+  }
+
+  void subscribeCharacteristic(String deviceId) {
+    final characteristic = QualifiedCharacteristic(
+        serviceId: serviceUuid,
+        characteristicId: BATTERY_CHARACTERISTIC_UUID,
+        deviceId: deviceId);
+
+    ble.subscribeToCharacteristic(characteristic).listen((data) {
+      // code to handle incoming data
+      print('Data received $data');
+    }, onError: (dynamic error) {
+      // code to handle errors
+      print('Subscribe error $error');
+    });
+  }
+
+  Stream<List<int>> subscribeBatteryStream(deviceId) async* {
+    final characteristic = QualifiedCharacteristic(
+        serviceId: serviceUuid,
+        characteristicId: BATTERY_CHARACTERISTIC_UUID,
+        deviceId: deviceId);
+    while (true) {
+      final response = await ble.readCharacteristic(characteristic);
+      yield response;
     }
   }
 }

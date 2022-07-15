@@ -108,6 +108,7 @@ class _BLEDeviceListState extends State<BLEDeviceList> {
                                   // bleConnector.connected
                                   //     ? bleConnector.disconnect(device.id)
                                   //     :
+                                  print("serviceUUids "+ device.serviceUuids.toString());
                                   await bleConnector.connect(device.id, device.name);
                                   setState(() {
                                     startScan();
