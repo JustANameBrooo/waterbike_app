@@ -5,9 +5,9 @@ import './bleDeviceList.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'bleConnector.dart';
 
-
 class HomePageScreen extends StatefulWidget {
-  final String ?deviceId;
+  final String? deviceId;
+
   const HomePageScreen({Key? key, this.deviceId}) : super(key: key);
 
   @override
@@ -22,14 +22,16 @@ class _HomePageState extends State<HomePageScreen> {
   @override
   void initState() {
     bleConnector = BleConnector();
-    //deviceConnector = BleDeviceConnector();
+    bleConnector.connectedDevicesStream.listen((value) {
+      setState(() {});
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    bool isConnected = false;
+    bool isConnected = bleConnector.connectedDevices.isNotEmpty;
 
     return Scaffold(
       backgroundColor: const Color(0xff392850),
@@ -37,31 +39,55 @@ class _HomePageState extends State<HomePageScreen> {
         children: <Widget>[
           Padding(
             padding:
-                EdgeInsets.only(left: 16, right: 16, top: size.height * 0.1),
+                EdgeInsets.only(left: 16, right: 16, top: size.height * 0.05),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      "Bluetooth",
-                      style: GoogleFonts.openSans(
-                        textStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      isConnected ? "Connected" : "Not Connected",
-                      style: GoogleFonts.openSans(
-                        textStyle: const TextStyle(
-                            color: Color(0xffa29aac),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500),
-                      ),
+                    Container(
+                      height: 150,
+                      width: size.width * 0.7,
+                      child: ListView(shrinkWrap: true, children: [
+                        Text(
+                          "Bluetooth",
+                          style: GoogleFonts.openSans(
+                            textStyle: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          isConnected ? "Connected" : "Not Connected",
+                          style: GoogleFonts.openSans(
+                            textStyle: TextStyle(
+                                color: isConnected ? Colors.blue :Color(0xffa29aac),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        ...bleConnector.connectedDevices.map((device) => Text(
+                              device.deviceName,
+                              style: GoogleFonts.openSans(
+                                textStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            )),
+                      ]),
+                      // Container(
+                      //   height: 100,
+                      //   child: ListView(
+                      //     children: bleConnector.connectedDevices
+                      //         .map((device) => Text(device.deviceName))
+                      //         .toList(),
+                      //   ),
+                      // ),
                     ),
                   ],
                 ),
@@ -84,7 +110,6 @@ class _HomePageState extends State<HomePageScreen> {
             ),
           ),
           //TODO Grid Dashboard
-          const SizedBox(height: 20),
           GridDashboard(bleConnector: bleConnector)
         ],
       ),

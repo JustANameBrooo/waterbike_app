@@ -19,6 +19,9 @@ class GridDashboard extends StatefulWidget {
 }
 
 class _GridDashboardState extends State<GridDashboard> {
+
+  late final BleConnector bleConnector = widget.bleConnector;
+  int? batteryGauge;
   double? speed;
   bool _setTotalDistance = false;
 
@@ -69,6 +72,10 @@ class _GridDashboardState extends State<GridDashboard> {
         }
       });
     });
+
+    bleConnector.batteryGaugeStream.listen((event) {
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -118,7 +125,7 @@ class _GridDashboardState extends State<GridDashboard> {
                             size: 90, color: Colors.amberAccent),
                       ),
                       Text(
-                        "70%",
+                        bleConnector.batteryGauge.toString(),
                         style: GoogleFonts.openSans(
                           textStyle: const TextStyle(
                               color: Colors.white,
