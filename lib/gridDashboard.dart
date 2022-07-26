@@ -7,11 +7,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'geolocationMap.dart';
 import './geolocator/totalDistance.dart' as total_distance;
 import 'bleConnector.dart';
+import './weatherInfo.dart';
 import 'dart:io' show Platform;
 
 class GridDashboard extends StatefulWidget {
-
   final BleConnector bleConnector;
+
   const GridDashboard({Key? key, required this.bleConnector}) : super(key: key);
 
   @override
@@ -19,7 +20,6 @@ class GridDashboard extends StatefulWidget {
 }
 
 class _GridDashboardState extends State<GridDashboard> {
-
   late final BleConnector bleConnector = widget.bleConnector;
   int? batteryGauge;
   double? speed;
@@ -72,10 +72,6 @@ class _GridDashboardState extends State<GridDashboard> {
         }
       });
     });
-
-    bleConnector.batteryGaugeStream.listen((event) {
-      setState(() {});
-    });
     super.initState();
   }
 
@@ -96,8 +92,7 @@ class _GridDashboardState extends State<GridDashboard> {
             MediaQuery.of(context).orientation == Orientation.portrait ? 2 : 3,
         children: <Widget>[
           InkWell(
-            onTap: () {
-            },
+            onTap: () {},
             //Battery
             child: Card(
                 shape: RoundedRectangleBorder(
@@ -125,7 +120,7 @@ class _GridDashboardState extends State<GridDashboard> {
                             size: 90, color: Colors.amberAccent),
                       ),
                       Text(
-                        bleConnector.batteryGauge.toString(),
+                        "${bleConnector.batteryGauge?.toString() ?? 0} %",
                         style: GoogleFonts.openSans(
                           textStyle: const TextStyle(
                               color: Colors.white,
@@ -179,6 +174,51 @@ class _GridDashboardState extends State<GridDashboard> {
                       SizedBox(height: 10),
                       Text(
                         'Speed',
+                        style: cardTextStyle,
+                      )
+                    ],
+                  ),
+                )),
+          ),
+          InkWell(
+            onTap: () {},
+            //Water Speed
+            child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                clipBehavior: Clip.antiAlias,
+                elevation: 4,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.deepPurple.shade500,
+                        Colors.purple.shade900,
+                        Colors.blue.shade900
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                          height: 100,
+                          child: Image.asset('assets/images/tide.png',
+                              scale: 0.8)),
+                      Text(
+                        "${bleConnector.waterSpeed?.toStringAsFixed(3) ?? 0} m/s",
+                        style: GoogleFonts.openSans(
+                          textStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'Speed w.r.t water',
                         style: cardTextStyle,
                       )
                     ],
@@ -286,7 +326,7 @@ class _GridDashboardState extends State<GridDashboard> {
           InkWell(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => GeolocationMap()));
+                  MaterialPageRoute(builder: (context) => GeolocationMap(bleConnector: bleConnector)));
             },
             child: Card(
                 shape: RoundedRectangleBorder(
@@ -323,13 +363,13 @@ class _GridDashboardState extends State<GridDashboard> {
                 )),
           ),
           InkWell(
-            // onTap: (){
-            //   showDialog(
-            //       context: context,
-            //       builder: (_) {
-            //         return BLEDeviceList(bleConnector: bleConnector);
-            //       });
-            // },
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (_) {
+                    return WeatherInfo();
+                  });
+            },
             child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
@@ -362,37 +402,6 @@ class _GridDashboardState extends State<GridDashboard> {
                   ),
                 )),
           ),
-          Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              clipBehavior: Clip.antiAlias,
-              elevation: 4,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.deepPurple.shade500,
-                      Colors.purple.shade900,
-                      Colors.blue.shade900
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                        height: 130,
-                        child:
-                            Image.asset('assets/images/tide.png', scale: 1.3)),
-                    Text(
-                      'Tidal',
-                      style: cardTextStyle,
-                    )
-                  ],
-                ),
-              )),
         ],
       ),
     );

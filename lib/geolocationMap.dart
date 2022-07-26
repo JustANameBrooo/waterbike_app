@@ -10,16 +10,21 @@ import 'package:flutter_compass/flutter_compass.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import './geolocator/totalDistance.dart' as total_distance;
 import 'package:google_fonts/google_fonts.dart';
+import 'bleConnector.dart';
 import 'dart:io' show Platform;
 
 class GeolocationMap extends StatefulWidget {
-  const GeolocationMap({Key? key}) : super(key: key);
+  final BleConnector bleConnector;
+
+  const GeolocationMap({Key? key, required this.bleConnector}) : super(key: key);
 
   @override
   State<GeolocationMap> createState() => _GeolocationMapState();
 }
 
 class _GeolocationMapState extends State<GeolocationMap> {
+
+  late final BleConnector bleConnector = widget.bleConnector;
   late CenterOnLocationUpdate _centerOnLocationUpdate;
   late StreamController<double?> _centerCurrentLocationStreamController;
   final MapController _mapController = MapController();
@@ -147,7 +152,7 @@ class _GeolocationMapState extends State<GeolocationMap> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            "0 m/s",
+                            "${bleConnector.waterSpeed?.toStringAsFixed(3) ?? 0} m/s",
                             style: GoogleFonts.openSans(
                               textStyle: const TextStyle(
                                   color: Colors.white,

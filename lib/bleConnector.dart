@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
@@ -16,12 +17,13 @@ class BleConnector {
 
   final connectedDevices = <ConnectedDevice>[];
   int? batteryGauge;
-  List<int>? waterSpeed;
+  num? waterSpeed;
+  //List<int>? waterSpeed;
 
   // final deviceConnectionController = StreamController<ConnectedDevice>();
   final connectedDevicesController = StreamController<List<ConnectedDevice>>();
   final batteryGaugeController = StreamController<int?>();
-  final waterSpeedController = StreamController<List<int>?>();
+  final waterSpeedController = StreamController<num?>();
 
   //Stream get deviceConnectionStream => deviceConnectionController.stream;
 
@@ -60,14 +62,11 @@ class BleConnector {
 
             // notifyListeners();
             print("Connected to " + id);
-            await readCharacteristic(deviceId);
+            // await readCharacteristic(deviceId);
             var batteryStream = subscribeBatteryStream(deviceId);
             batteryStream.listen((event) {
               print(event.toString());
               print("BATTERY");
-              for (var value in event) {
-                print(String.fromCharCode(value));
-              }
               batteryGauge = event[0];
               batteryGaugeController.add(batteryGauge);
             });
@@ -75,10 +74,12 @@ class BleConnector {
             waterSpeedStream.listen((event) {
               print(event.toString());
               print("WATER SPEED");
-              for (var value in event) {
-                print(String.fromCharCode(value));
-              }
-              waterSpeed = event;
+              num water_speed = 0;
+              event.asMap().forEach((index, value) {
+                water_speed += value * pow(256, index);
+              });
+              print(water_speed);
+              waterSpeed = water_speed/100;
               waterSpeedController.add(waterSpeed);
             });
             // subscribeCharacteristic(deviceId);
