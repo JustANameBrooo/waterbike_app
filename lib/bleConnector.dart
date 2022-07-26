@@ -7,8 +7,7 @@ import 'bleConnector.dart';
 
 class BleConnector {
   final Uuid serviceUuid = Uuid.parse("44d55770-bd07-4ce7-8ff9-c564c9c9b24a");
-  final Uuid batteryUuid =
-      Uuid.parse("62391be9-a26b-4a82-8a13-e4db229df11e");
+  final Uuid batteryUuid = Uuid.parse("62391be9-a26b-4a82-8a13-e4db229df11e");
   final Uuid waterSpeedUuid =
       Uuid.parse("a56f6a0e-164d-4d7c-b4cd-74afbdfeaf1f");
 
@@ -27,7 +26,9 @@ class BleConnector {
   //Stream get deviceConnectionStream => deviceConnectionController.stream;
 
   Stream get connectedDevicesStream => connectedDevicesController.stream;
+
   Stream get batteryGaugeStream => batteryGaugeController.stream;
+
   Stream get waterSpeedStream => waterSpeedController.stream;
 
   Future<void> connect(String deviceId, String deviceName) async {
@@ -163,7 +164,6 @@ class BleConnector {
       yield response;
     }
   }
-
 }
 
 class ConnectedDevice {

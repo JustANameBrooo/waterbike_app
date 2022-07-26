@@ -8,7 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import './distance/totalDistance.dart' as total_distance;
+import './geolocator/totalDistance.dart' as total_distance;
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:io' show Platform;
 

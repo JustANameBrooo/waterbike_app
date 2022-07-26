@@ -4,8 +4,8 @@ import 'package:koukicons/speed.dart';
 import 'package:koukicons/map2.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'geolocation.dart';
-import './distance/totalDistance.dart' as total_distance;
+import 'geolocationMap.dart';
+import './geolocator/totalDistance.dart' as total_distance;
 import 'bleConnector.dart';
 import 'dart:io' show Platform;
 
@@ -322,37 +322,46 @@ class _GridDashboardState extends State<GridDashboard> {
                   ),
                 )),
           ),
-          Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              clipBehavior: Clip.antiAlias,
-              elevation: 4,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.deepPurple.shade500,
-                      Colors.purple.shade900,
-                      Colors.blue.shade900
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+          InkWell(
+            // onTap: (){
+            //   showDialog(
+            //       context: context,
+            //       builder: (_) {
+            //         return BLEDeviceList(bleConnector: bleConnector);
+            //       });
+            // },
+            child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                clipBehavior: Clip.antiAlias,
+                elevation: 4,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.deepPurple.shade500,
+                        Colors.purple.shade900,
+                        Colors.blue.shade900
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                        height: 130,
-                        child: Image.asset('assets/images/weather.png',
-                            scale: 5.5)),
-                    Text(
-                      'Weather',
-                      style: cardTextStyle,
-                    )
-                  ],
-                ),
-              )),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                          height: 130,
+                          child: Image.asset('assets/images/weather.png',
+                              scale: 5.5)),
+                      Text(
+                        'Weather',
+                        style: cardTextStyle,
+                      )
+                    ],
+                  ),
+                )),
+          ),
           Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
