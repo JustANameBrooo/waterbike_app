@@ -109,6 +109,10 @@ class BleConnector {
   Future<void> disconnect(ConnectedDevice connectedDevice) async {
     try {
       await connectedDevice.connection.cancel();
+      batteryGauge = 0;
+      batteryGaugeController.add(batteryGauge);
+      waterSpeed = 0;
+      waterSpeedController.add(waterSpeed);
       connectedDevices.remove(connectedDevice);
       connectedDevicesController.add(connectedDevices);
       // notifyListeners();

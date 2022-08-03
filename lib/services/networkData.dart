@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-const apiKey = "0f95cc2cda54a193e56a502c88b190b5";
+const apiKey = "dac7760b78073c971dd9583307f2da68";
 
 class NetworkData {
   NetworkData(this.url);
@@ -22,3 +22,4 @@ class NetworkData {
   }
 }
 
+//http://api.openweathermap.org/data/2.5/forecast/daily?lat=35&lon=139&cnt=10&appid=0f95cc2cda54a193e56a502c88b190b5

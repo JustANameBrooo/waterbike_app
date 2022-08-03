@@ -1,14 +1,26 @@
 import './networkData.dart';
 import 'package:geolocator/geolocator.dart';
 
-const weatherApiUrl = 'https://api.openweathermap.org/data/2.5/weather';
+const weatherApiUrl = 'http://api.openweathermap.org/data/2.5/forecast';
+const geoApiUrl = 'http://api.openweathermap.org/geo/1.0/direct';
 
 class WeatherModel {
 
   Future<dynamic> getCityWeather(String cityName) async {
-    var url = '$weatherApiUrl?q=$cityName&appid=$apiKey&units=metric';
-    NetworkData networkHelper = NetworkData(url);
-    var weatherData = networkHelper.getData();
+    var url = '$geoApiUrl?q=$cityName&limit=1&appid=$apiKey';
+    var weatherDataByCity = await NetworkData(url).getData();
+    print("cityLatLong");
+    print(weatherDataByCity);
+    String latitudeStr = weatherDataByCity[0]["lat"].toStringAsFixed(1);
+    String longitudeStr = weatherDataByCity[0]["lon"].toStringAsFixed(1);
+    double latitude = double.parse(latitudeStr);
+    double longitude = double.parse(longitudeStr);
+    print("lat");
+    print(latitude);
+    var weatherData = await NetworkData(
+        '$weatherApiUrl?lat=$latitude&lon=$longitude&appid=$apiKey').getData();
+    print("CITYLA");
+    print(weatherData);
     return weatherData;
   }
 
@@ -20,28 +32,9 @@ class WeatherModel {
     /// Get location data
     ///&units=metric change the temperature metric
     NetworkData networkHelper = NetworkData(
-        '$weatherApiUrl?lat=${position.latitude}&lon=${position.longitude}&appid=$apiKey&units=metric');
+        '$weatherApiUrl?lat=${position.latitude}&lon=${position.longitude}&appid=$apiKey');
     var weatherData = await networkHelper.getData();
     return weatherData;
   }
 
-  String getWeatherIcon(int condition) {
-    if (condition < 300) {
-      return '🌩';
-    } else if (condition < 400) {
-      return '🌧';
-    } else if (condition < 600) {
-      return '☔️';
-    } else if (condition < 700) {
-      return '☃️';
-    } else if (condition < 800) {
-      return '🌫';
-    } else if (condition == 800) {
-      return '☀️';
-    } else if (condition <= 804) {
-      return '☁️';
-    } else {
-      return '🤷‍';
-    }
-  }
 }

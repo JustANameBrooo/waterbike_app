@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePageScreen> {
     bool isConnected = bleConnector.connectedDevices.isNotEmpty;
 
     return Scaffold(
-      backgroundColor: const Color(0xff392850),
+      backgroundColor: const Color(0xff36213e), //Color(0xff392850),
       body: Column(
         children: <Widget>[
           Padding(

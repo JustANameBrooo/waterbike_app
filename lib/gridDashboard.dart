@@ -103,9 +103,9 @@ class _GridDashboardState extends State<GridDashboard> {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.deepPurple.shade500,
-                        Colors.purple.shade900,
-                        Colors.blue.shade900
+                        Color(0xff36213e), // Colors.deepPurple.shade500,// Colors.purple.shade900, // Colors.blue.shade900
+                        Color(0xff554971),
+                        Color(0xff63768d)
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -149,9 +149,9 @@ class _GridDashboardState extends State<GridDashboard> {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.deepPurple.shade500,
-                        Colors.purple.shade900,
-                        Colors.blue.shade900
+                        Color(0xff36213e), // Colors.deepPurple.shade500,// Colors.purple.shade900, // Colors.blue.shade900
+                        Color(0xff554971),
+                        Color(0xff63768d)
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -192,9 +192,9 @@ class _GridDashboardState extends State<GridDashboard> {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.deepPurple.shade500,
-                        Colors.purple.shade900,
-                        Colors.blue.shade900
+                        Color(0xff36213e), // Colors.deepPurple.shade500,// Colors.purple.shade900, // Colors.blue.shade900
+                        Color(0xff554971),
+                        Color(0xff63768d)
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -287,9 +287,9 @@ class _GridDashboardState extends State<GridDashboard> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              Colors.deepPurple.shade500,
-                              Colors.purple.shade900,
-                              Colors.blue.shade900
+                              Color(0xff36213e), // Colors.deepPurple.shade500,// Colors.purple.shade900, // Colors.blue.shade900
+                              Color(0xff554971),
+                              Color(0xff63768d)
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -337,9 +337,9 @@ class _GridDashboardState extends State<GridDashboard> {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.deepPurple.shade500,
-                        Colors.purple.shade900,
-                        Colors.blue.shade900
+                        Color(0xff36213e), // Colors.deepPurple.shade500,// Colors.purple.shade900, // Colors.blue.shade900
+                        Color(0xff554971),
+                        Color(0xff63768d)
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -379,9 +379,9 @@ class _GridDashboardState extends State<GridDashboard> {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.deepPurple.shade500,
-                        Colors.purple.shade900,
-                        Colors.blue.shade900
+                        Color(0xff36213e), // Colors.deepPurple.shade500,// Colors.purple.shade900, // Colors.blue.shade900
+                        Color(0xff554971),
+                        Color(0xff63768d)
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
