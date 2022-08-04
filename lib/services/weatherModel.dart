@@ -11,8 +11,8 @@ class WeatherModel {
     var weatherDataByCity = await NetworkData(url).getData();
     print("cityLatLong");
     print(weatherDataByCity);
-    String latitudeStr = weatherDataByCity[0]["lat"].toStringAsFixed(1);
-    String longitudeStr = weatherDataByCity[0]["lon"].toStringAsFixed(1);
+    String latitudeStr = weatherDataByCity[0]["lat"].toStringAsFixed(7);
+    String longitudeStr = weatherDataByCity[0]["lon"].toStringAsFixed(7);
     double latitude = double.parse(latitudeStr);
     double longitude = double.parse(longitudeStr);
     print("lat");
@@ -28,6 +28,8 @@ class WeatherModel {
     /// await for methods that return future
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+    print(position.latitude);
+    print(position.longitude);
 
     /// Get location data
     ///&units=metric change the temperature metric

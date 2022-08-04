@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:koukicons/speed.dart';
@@ -31,42 +33,41 @@ class _GridDashboardState extends State<GridDashboard> {
 
     late LocationSettings locationSettings;
 
-    locationSettings = const LocationSettings(
-      accuracy: LocationAccuracy.best,
-    );
+    // locationSettings = const LocationSettings(
+    //   accuracy: LocationAccuracy.best,
+    // );
 
-    // if (Platform.isAndroid) {
-    //   locationSettings = AndroidSettings(
-    //       accuracy: LocationAccuracy.best,
-    //       forceLocationManager: true,
-    //       intervalDuration: const Duration(seconds: 3),
-    //       //(Optional) Set foreground notification config to keep the app alive
-    //       //when going to the background
-    //       foregroundNotificationConfig: const ForegroundNotificationConfig(
-    //         notificationText:
-    //         "Example app will continue to receive your location even when you aren't using it",
-    //         notificationTitle: "Running in Background",
-    //         enableWakeLock: true,
-    //       )
-    //   );
-    // } else if (Platform.isIOS || Platform.isMacOS) {
-    //   locationSettings = AppleSettings(
-    //     accuracy: LocationAccuracy.best,
-    //     activityType: ActivityType.fitness,
-    //     pauseLocationUpdatesAutomatically: true,
-    //     // Only set to true if our app will be started up in the background.
-    //     showBackgroundLocationIndicator: false,
-    //   );
-    // } else {
-    //   locationSettings = const LocationSettings(
-    //     accuracy: LocationAccuracy.best,
-    //   );
-    // }
+    if (Platform.isAndroid) {
+      locationSettings = AndroidSettings(
+          accuracy: LocationAccuracy.best,
+          intervalDuration: const Duration(seconds: 5),
+          //(Optional) Set foreground notification config to keep the app alive
+          //when going to the background
+          foregroundNotificationConfig: const ForegroundNotificationConfig(
+            notificationText:
+            "Example app will continue to receive your location even when you aren't using it",
+            notificationTitle: "Running in Background",
+          )
+      );
+    } else if (Platform.isIOS || Platform.isMacOS) {
+      locationSettings = AppleSettings(
+        accuracy: LocationAccuracy.best,
+        activityType: ActivityType.fitness,
+        pauseLocationUpdatesAutomatically: true,
+        // Only set to true if our app will be started up in the background.
+        showBackgroundLocationIndicator: false,
+      );
+    } else {
+      locationSettings = const LocationSettings(
+        accuracy: LocationAccuracy.best,
+      );
+    }
 
     Geolocator.getPositionStream(locationSettings: locationSettings)
         .listen((position) {
       setState(() {
         speed = position.speed;
+        print("test");
         if (total_distance.isCalculating) {
           total_distance.appendLatlngList(position);
         }

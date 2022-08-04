@@ -48,6 +48,39 @@ class _GeolocationMapState extends State<GeolocationMap> {
     _centerCurrentLocationStreamController = StreamController<double?>();
 
     _checkPermission();
+
+    late LocationSettings locationSettings;
+
+    // locationSettings = const LocationSettings(
+    //   accuracy: LocationAccuracy.best,
+    // );
+
+    if (Platform.isAndroid) {
+      locationSettings = AndroidSettings(
+          accuracy: LocationAccuracy.best,
+          intervalDuration: const Duration(seconds: 5),
+          //(Optional) Set foreground notification config to keep the app alive
+          //when going to the background
+          foregroundNotificationConfig: const ForegroundNotificationConfig(
+            notificationText:
+            "Example app will continue to receive your location even when you aren't using it",
+            notificationTitle: "Running in Background",
+          )
+      );
+    } else if (Platform.isIOS || Platform.isMacOS) {
+      locationSettings = AppleSettings(
+        accuracy: LocationAccuracy.best,
+        activityType: ActivityType.fitness,
+        pauseLocationUpdatesAutomatically: true,
+        // Only set to true if our app will be started up in the background.
+        showBackgroundLocationIndicator: false,
+      );
+    } else {
+      locationSettings = const LocationSettings(
+        accuracy: LocationAccuracy.best,
+      );
+    }
+
     FlutterCompass.events?.listen((event) {
       setState(() {
         _bearing = event.heading;
@@ -56,9 +89,7 @@ class _GeolocationMapState extends State<GeolocationMap> {
     });
 
     Geolocator.getPositionStream(
-        locationSettings: const LocationSettings(
-      accuracy: LocationAccuracy.best,
-    )).listen((position) {
+        locationSettings: locationSettings).listen((position) {
       setState(() {
         _currLatLang = LatLng(position.latitude, position.longitude);
         _gpsSpeed = position.speed;
@@ -94,7 +125,7 @@ class _GeolocationMapState extends State<GeolocationMap> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Navigation'),
-        backgroundColor: const Color(0xff392850),
+        backgroundColor: const Color(0xff36213e),
       ),
       body: SlidingUpPanel(
         controller: _sliderController,
@@ -105,7 +136,7 @@ class _GeolocationMapState extends State<GeolocationMap> {
             ? MediaQuery.of(context).size.height * 0.2
             : MediaQuery.of(context).size.height * 0.3,
         borderRadius: radius,
-        color: const Color(0xff392850),
+        color: const Color(0xff36213e),
         panel: Column(children: <Widget>[
           Container(
               width: MediaQuery.of(context).size.width / 6,
@@ -113,7 +144,7 @@ class _GeolocationMapState extends State<GeolocationMap> {
               child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.deepPurple)),
+                          MaterialStateProperty.all<Color>(Color(0xff554971))),
                   onPressed: () {
                     if (_sliderOpen) {
                       print('open');
@@ -140,9 +171,9 @@ class _GeolocationMapState extends State<GeolocationMap> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Colors.deepPurple.shade500,
-                            Colors.purple.shade900,
-                            Colors.blue.shade900
+                            Color(0xff36213e), // Colors.deepPurple.shade500,// Colors.purple.shade900, // Colors.blue.shade900
+                            Color(0xff554971),
+                            Color(0xff63768d)
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -237,9 +268,9 @@ class _GeolocationMapState extends State<GeolocationMap> {
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    Colors.deepPurple.shade500,
-                                    Colors.purple.shade900,
-                                    Colors.blue.shade900
+                                    Color(0xff36213e), // Colors.deepPurple.shade500,// Colors.purple.shade900, // Colors.blue.shade900
+                                    Color(0xff554971),
+                                    Color(0xff63768d)
                                   ],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
@@ -282,9 +313,9 @@ class _GeolocationMapState extends State<GeolocationMap> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Colors.deepPurple.shade500,
-                            Colors.purple.shade900,
-                            Colors.blue.shade900
+                            Color(0xff36213e), // Colors.deepPurple.shade500,// Colors.purple.shade900, // Colors.blue.shade900
+                            Color(0xff554971),
+                            Color(0xff63768d)
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,

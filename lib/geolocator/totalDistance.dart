@@ -8,15 +8,24 @@ double totalDistance = 0;
 
 void appendLatlngList(position) {
   dynamic data = {"lat": position.latitude, "lng": position.longitude};
-  print(data);
   latlngList.add(data);
   if (latlngList.length >= 2) {
-    totalDistance += Geolocator.distanceBetween(
+    print(latlngList);
+    if (latlngList.length>2 ) {
+      latlngList.removeAt(0);
+    }
+    double distanceBetween = Geolocator.distanceBetween(
         latlngList[latlngList.length - 2]["lat"],
         latlngList[latlngList.length - 2]["lng"],
         latlngList[latlngList.length - 1]["lat"],
         latlngList[latlngList.length - 1]["lng"]);
+    if (distanceBetween > 1) {
+      print(distanceBetween);
+      totalDistance += distanceBetween;
+    }
   }
+  print("heyo");
+  print(latlngList);
 }
 
 void startTotalDistance() {
@@ -67,8 +76,6 @@ void resetTotalDistance() {
 //   }
 //
 // }
-
-
 
 // class TotalDistance {
 //

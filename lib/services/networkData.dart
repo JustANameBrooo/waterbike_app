@@ -4,6 +4,10 @@ import 'package:http/http.dart' as http;
 
 const apiKey = "dac7760b78073c971dd9583307f2da68";
 
+//    "lat": 1.3546528,
+//     "lon": 103.9435712,
+// http://api.openweathermap.org/data/2.5/forecast?lat=$1.35&lon=$103.94&appid=dac7760b78073c971dd9583307f2da68
+
 class NetworkData {
   NetworkData(this.url);
   final String url;
