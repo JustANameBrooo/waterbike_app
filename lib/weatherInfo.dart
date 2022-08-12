@@ -73,10 +73,10 @@ class _WeatherInfoState extends State<WeatherInfo> {
               updateForecast(weatherData);
             },
             child: Text(
-              'Get Weather of Current Location',
+              'Get Weather Forecast for Current Location',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20.0,
+                fontSize: 17.0,
                 fontFamily: 'Spartan MB',
                 color: Color(0xffffffff),
               ),

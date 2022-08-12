@@ -2,6 +2,15 @@ import 'dart:async';
 
 import 'package:geolocator/geolocator.dart';
 
+//{
+//         "latitude": 1.329528,
+//         "longitude": 103.537444
+//     },
+//     {
+//         "latitude": 1.329528,
+//         "longitude": 103.536639
+//     },
+
 class Geolocation {
   final GeolocatorPlatform geolocator = GeolocatorPlatform.instance;
   StreamSubscription<Position>? positionStreamSubscription;
